@@ -93,7 +93,7 @@ public class DocumentParser
         // paper abstract
         lists = doc.select("blockquote.abstract.mathjax");
         if (lists.isEmpty())
-            paper.setPaperAbstract(null);
+            paper.setPaperAbstract(new String(" "));
         else
             paper.setPaperAbstract(parseAbstractFromElement(lists.first()));
         

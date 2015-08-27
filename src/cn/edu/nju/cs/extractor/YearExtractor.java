@@ -6,12 +6,14 @@ import java.util.Iterator;
 
 public class YearExtractor implements Extractor
 {
-    private static final int MONTHS_OF_YEAR = 12;
-    private String           year           = null;
+    private static final int  MONTHS_OF_YEAR = 12;
+    private String            year           = null;
+    private ArrayList<String> paperFilePathList  = null;
     
     public YearExtractor(String year)
     {
         this.year = year;
+        this.paperFilePathList = new ArrayList<String>();
     }
     
     @Override
@@ -26,7 +28,13 @@ public class YearExtractor implements Extractor
             String month = it.next();
             Extractor monthExtractor = new MonthExtractor(month);
             monthExtractor.extract();
+            this.paperFilePathList.add(((MonthExtractor)monthExtractor).getPaperFilePath());
         }
+    }
+    
+    public ArrayList<String> getPaperFilePathList()
+    {
+        return this.paperFilePathList;
     }
     
     private ArrayList<String> createMonthsList(String year)

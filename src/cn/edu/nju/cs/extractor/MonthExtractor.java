@@ -7,27 +7,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import cn.edu.nju.cs.paper.*;
+import cn.edu.nju.cs.utility.ManagerIO;
 
 public class MonthExtractor implements Extractor
 {
-    private static final String ARCHIVE_PAPERS_FILE_PATH_PREFIX = "D:/workspaces/arxiv/archive-contents/";
-    private static final String ARCHIVE_PAPERS_FILE_PATH_POSFIX = "-papers.txt";
-    private static final String ARCHIVE_IDS_FILE_PATH_PREFIX    = "D:/workspaces/arxiv/archive-contents/";
-    private static final String ARCHIVE_IDS_FILE_PATH_POSFIX    = "-ids.txt";
-    private static final int    SUCCEED_FILE_EMPTY              = 1;
-    private static final int    SUCCEED_FILE_DONE               = 0;
-    private static final int    FAIL_CONNECTION_ERROR           = -1;
-    private String              month                           = null;
-    private String              idFilePath                      = null;
-    private String              paperFilePath                   = null;
+    private static final int SUCCEED_FILE_EMPTY    = 1;
+    private static final int SUCCEED_FILE_DONE     = 0;
+    private static final int FAIL_CONNECTION_ERROR = -1;
+    private String           month                 = null;
+    private String           idFilePath            = null;
+    private String           paperFilePath         = null;
     
     public MonthExtractor(String month)
     {
         this.month = month;
-        this.idFilePath = ARCHIVE_IDS_FILE_PATH_PREFIX
-                + this.month + ARCHIVE_IDS_FILE_PATH_POSFIX;
-        this.paperFilePath = ARCHIVE_PAPERS_FILE_PATH_PREFIX
-                + this.month + ARCHIVE_PAPERS_FILE_PATH_POSFIX;
+        this.idFilePath = ManagerIO.createMonthIdFilePath(this.month);
+        this.paperFilePath = ManagerIO.createMonthPaperFilePath(this.month);
     }
     
     @Override
@@ -47,6 +42,11 @@ public class MonthExtractor implements Extractor
         // recover the procedure by backing up the remaining paper ids.
     }
     
+    public String getPaperFilePath()
+    {
+        return paperFilePath;
+    }
+    
     // given a month 'xxxx', the page 'ARXIV_MIRROR_SITE/list/quant-ph/xxxx' stores papers
     // published in that month, but it doesn't show all papers in just one page.
     // This method will scan the page and find out how many papers
@@ -57,7 +57,7 @@ public class MonthExtractor implements Extractor
     private void extractPaperIDs() throws IOException
     {
         // Step1. generate that month's arxiv new link URL
-        String oldUrl = Utilities.createArchiveURLByMonth(month);
+        String oldUrl = ManagerIO.createMonthArchiveURL(month);
         Document oldDoc = Utilities.newConnection(oldUrl);
         String newUrl = oldUrl + "?show=" + DocumentParser.parseArchiveNumberOfPapers(oldDoc);
         
@@ -65,7 +65,7 @@ public class MonthExtractor implements Extractor
         Document newDoc = Utilities.newConnection(newUrl);
         ArrayList<String> archiveIds = DocumentParser.parseArchiveIDs(newDoc);
         // Step3. save the extracted ids.
-        PaperIO.savePaperIDs(archiveIds, idFilePath, true);
+        ManagerIO.savePaperIDs(archiveIds, idFilePath, true);
     }
     
     private int extractPapers() throws IOException
@@ -73,7 +73,7 @@ public class MonthExtractor implements Extractor
         // Step1. load this month's arXiv ids from idFilePath into a
         // temporary storage array notExtractedArchiveIds
         ArrayList<String> notExtractedArchiveIds = new ArrayList<String>();
-        PaperIO.loadPaperIDs(notExtractedArchiveIds, idFilePath);
+        ManagerIO.loadPaperIDs(notExtractedArchiveIds, idFilePath);
         if (notExtractedArchiveIds.isEmpty())
             return SUCCEED_FILE_EMPTY;
         
@@ -83,7 +83,7 @@ public class MonthExtractor implements Extractor
         while (!notExtractedArchiveIds.isEmpty())
         {
             String id = notExtractedArchiveIds.get(0);
-            String url = Utilities.createArchivePaperURL(id);
+            String url = ManagerIO.createArchivePaperURL(id);
             
             System.out.println("+++ processing " + url + " ...");
             
@@ -94,8 +94,8 @@ public class MonthExtractor implements Extractor
             }
             catch (IOException e)
             {
-                PaperIO.savePapers(papersList, paperFilePath, true);
-                PaperIO.savePaperIDs(notExtractedArchiveIds, idFilePath, false);
+                ManagerIO.savePapers(papersList, paperFilePath, true);
+                ManagerIO.savePaperIDs(notExtractedArchiveIds, idFilePath, false);
                 return FAIL_CONNECTION_ERROR;
             }
             ;
@@ -107,8 +107,8 @@ public class MonthExtractor implements Extractor
             // Random void sleep, to sleep the program for several seconds.
             Utilities.randomAvoidSleep();
         }
-        PaperIO.savePapers(papersList, paperFilePath, true);
-        PaperIO.savePaperIDs(notExtractedArchiveIds, idFilePath, false);
+        ManagerIO.savePapers(papersList, paperFilePath, true);
+        ManagerIO.savePaperIDs(notExtractedArchiveIds, idFilePath, false);
         return SUCCEED_FILE_DONE;
     }
 }

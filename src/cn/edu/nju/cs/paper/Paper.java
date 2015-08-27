@@ -37,7 +37,7 @@ public class Paper
         this.paperAbstract = new StringBuffer();
         this.paperURL = new String();
     }
- 
+    
     public String getPaperArXivId()
     {
         return paperArXivId;
@@ -85,7 +85,7 @@ public class Paper
     
     public String getPaperAbstract()
     {
-        if ( null == paperAbstract )
+        if (null == paperAbstract)
             return null;
         else
             return paperAbstract.toString();
@@ -94,6 +94,11 @@ public class Paper
     public void setPaperAbstract(StringBuffer paperAbstract)
     {
         this.paperAbstract = paperAbstract;
+    }
+    
+    public void setPaperAbstract(String paperAbstractString)
+    {
+        this.paperAbstract = new StringBuffer(paperAbstractString);
     }
     
     public String getPaperComments()
@@ -134,12 +139,12 @@ public class Paper
     {
         this.paperJournal = paperJournal;
     }
-
+    
     public String getPaperURL()
     {
         return paperURL;
     }
-
+    
     public void setPaperURL(String paperURL)
     {
         this.paperURL = paperURL;

@@ -14,8 +14,6 @@ import java.util.Random;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import cn.edu.nju.cs.paper.PaperIO;
-
 public class Utilities
 {
     
@@ -51,25 +49,5 @@ public class Utilities
             System.out.println("Sleeping failed...");
             e.printStackTrace();
         }
-    }
-    
-    public static String createNewSubmissionsURL() throws IOException
-    {
-        String mirrorSite = PaperIO.readArxivConfigFile(PaperIO.MIRROR_SITE_VALUE_TYPE);
-        String subject = PaperIO.readArxivConfigFile(PaperIO.SUBJECT_VALUE_TYPE);
-        return mirrorSite + "/list/" + subject + "/new";
-    }
-
-    public static String createArchiveURLByMonth(String month) throws IOException
-    {
-        String mirrorSite = PaperIO.readArxivConfigFile(PaperIO.MIRROR_SITE_VALUE_TYPE);
-        String subject = PaperIO.readArxivConfigFile(PaperIO.SUBJECT_VALUE_TYPE);
-        return mirrorSite + "/list/" + subject + "/" + month;
-    }
-    
-    public static String createArchivePaperURL(String paperID) throws IOException
-    {
-        String mirrorSite = PaperIO.readArxivConfigFile(PaperIO.MIRROR_SITE_VALUE_TYPE);
-        return mirrorSite + "/abs/" + paperID;
     }
 }

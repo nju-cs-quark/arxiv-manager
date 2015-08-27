@@ -6,29 +6,32 @@ import java.util.ArrayList;
 import org.jsoup.nodes.Document;
 
 import cn.edu.nju.cs.paper.*;
+import cn.edu.nju.cs.utility.ManagerIO;
 
 public class NewSubmissionExtractor implements Extractor
 {
-    private static final String NEW_SUBMISSION_PAPERS_FILE_PATH_PREFIX = "D:/workspaces/arxiv/new-submissions/";
-    private static final String NEW_SUBMISSION_PAPERS_FILE_PATH_POSFIX = "-papers.txt";
     
-    private Document            doc                                    = null;
-    private String              paperFilePath                          = null;
+    private Document doc           = null;
+    private String   paperFilePath = null;
     
     public NewSubmissionExtractor() throws IOException
     {
-        String url = Utilities.createNewSubmissionsURL();
+        String url = ManagerIO.createNewSubmissionsURL();
         doc = Utilities.newConnection(url);
         
         String newSubmissionFileName = DocumentParser.parseNewSubmissionDate(this.doc);
-        paperFilePath = NEW_SUBMISSION_PAPERS_FILE_PATH_PREFIX
-                + newSubmissionFileName + NEW_SUBMISSION_PAPERS_FILE_PATH_POSFIX;
+        paperFilePath = ManagerIO.createNewSubmissionPaperFilePath(newSubmissionFileName);
     }
     
     @Override
     public void extract() throws IOException
     {
         ArrayList<Paper> newSubmissionPapers = DocumentParser.parseNewSubmissionPapers(this.doc);
-        PaperIO.savePapers(newSubmissionPapers, paperFilePath, false);
+        ManagerIO.savePapers(newSubmissionPapers, paperFilePath, false);
+    }
+    
+    public String getPaperFilePath()
+    {
+        return paperFilePath;
     }
 }
