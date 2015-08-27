@@ -28,6 +28,8 @@ import org.apache.commons.cli.ParseException;
 
 import cn.edu.nju.cs.extractor.*;
 import cn.edu.nju.cs.filter.Filter;
+import cn.edu.nju.cs.filter.PapersFilter;
+import cn.edu.nju.cs.utility.FileOpener;
 import cn.edu.nju.cs.utility.ManagerIO;
 
 @SuppressWarnings("deprecation")
@@ -127,6 +129,14 @@ public class ArxivManager
                     Filter filter = new Filter(filePath);
                     filter.filter();
                     System.out.println("arxiv-manager: filtering new submissions done!");
+                    
+                    // open the filtered file for me to read
+                    int index = filePath.indexOf('.');
+                    StringBuffer filteredFilePath = new StringBuffer();
+                    filteredFilePath.append(filePath.substring(0, index));
+                    filteredFilePath.append(PapersFilter.FILTERED_PAPERS_FILE_MARK);
+                    filteredFilePath.append(filePath.substring(index));
+                    FileOpener.open(filteredFilePath.toString());
                 }
             }
             if (cmd.hasOption("m"))
