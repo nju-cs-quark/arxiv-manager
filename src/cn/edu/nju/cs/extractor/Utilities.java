@@ -27,9 +27,9 @@ public class Utilities
         catch (IOException e)
         {
             System.err
-                    .println("newConnection(): connecting error, cannot download the page,"
-                            + " please run the program again...");
-            return doc;
+                    .println("newConnection(): connecting error, program terminated,"
+                            + " please run it again...");
+            System.exit(-1);
         }
         ;
         return doc;

@@ -335,6 +335,10 @@ public class ManagerIO
     {
         String mirrorSite = getMirrorSite();
         String subject = getSubject();
+        
+        String tmp = mirrorSite + "/list/" + subject + "/new";
+        System.out.println(tmp);
+        
         return mirrorSite + "/list/" + subject + "/new";
     }
     
