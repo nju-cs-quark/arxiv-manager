@@ -141,7 +141,7 @@ public class ArxivManager
             }
             if (cmd.hasOption("m"))
             {
-                String monthString = cmd.getOptionValue("month");
+                String monthString = cmd.getOptionValue("m");
                 System.out.println("arxiv-manager: extracting submissions of month "
                         + monthString + " now...");
                 Extractor monthExtractor = new MonthExtractor(monthString);
@@ -163,7 +163,7 @@ public class ArxivManager
             }
             if (cmd.hasOption("y"))
             {
-                String yearString = cmd.getOptionValue("year");
+                String yearString = cmd.getOptionValue("y");
                 System.out.println("arxiv-manager: extracting submissions of year "
                         + yearString + " now...");
                 Extractor yearExtractor = new YearExtractor(yearString);

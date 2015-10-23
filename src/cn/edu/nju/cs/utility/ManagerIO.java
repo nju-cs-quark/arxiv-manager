@@ -3,9 +3,11 @@ package cn.edu.nju.cs.utility;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -205,6 +207,84 @@ public class ManagerIO
         writer.flush();
         writer.close();
     }
+    
+    public static void savePapersInMarkdown(ArrayList<Paper> papers, String filePath,
+            boolean append) throws IOException
+    {
+        File file = new File(filePath);
+        if (!file.exists())
+            file.createNewFile();
+        String fileName = file.getName();
+        fileName = new String("20" + fileName.substring(0, 4) + " Filtered arXiv Papers");
+        // keep the markdown file in UTF-8 format
+        BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+        // For each markdown file, there is a front matter
+        writer.write("---");
+        writer.newLine();
+        writer.write("layout: arxiv");
+        writer.newLine();
+        writer.write("title: " + fileName);
+        writer.newLine();
+        writer.write("---");
+        writer.newLine();
+        writer.newLine();
+        // write papers' information
+        Iterator<Paper> it = papers.iterator();
+        int cnt = 0;
+        while (it.hasNext())
+        {
+            Paper paper = it.next();
+            cnt ++;
+            writer.write("**" + cnt + ".    " + paper.getPaperTitle() + "**" + "  ");
+            writer.newLine();
+            
+            writer.write(paper.getPaperAuthors() + "  ");
+            writer.newLine();
+            
+            String journal = paper.getPaperJournal();
+            if (null != journal && journal.length() > 2)
+            {
+                writer.write(journal + "  ");
+                writer.newLine();
+            }
+            
+            String url = paper.getPaperURL();
+            if (null != url)
+            {
+                writer.write(url + "  ");
+                writer.newLine();
+            }
+            
+            String abs = paper.getPaperAbstract();
+           // remove YAML tags
+            abs = abs.replaceAll("\\{\\{", " ");
+            abs = abs.replaceAll("\\{\\%", " ");
+            if (null != abs)
+            {
+                writer.write("<blockquote>");
+                writer.newLine();
+                writer.write("<p>");
+                writer.newLine();
+                writer.write(abs);
+                writer.newLine();
+                writer.write("</p>");
+                writer.newLine();
+                writer.write("</blockquote>");
+                writer.newLine();
+            }
+            
+            writer.newLine();
+            writer.write("------");
+            writer.newLine();
+            writer.newLine();
+            
+            writer.flush();
+        }
+        
+        writer.flush();
+        writer.close();
+    } 
     
     public static void savePaperIDs(ArrayList<String> idList,
             String idFilePath, boolean append) throws IOException

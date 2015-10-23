@@ -36,9 +36,12 @@ import cn.edu.nju.cs.utility.ManagerIO;
 public class PapersFilter
 {
     public static final String FILTERED_PAPERS_FILE_MARK = "-filtered";
+    public static final String MARKDOWN_PAPERS_FILE_MARK = "-markdown";
+    public static final String MARKDOWN_FORMAT_EXTENSION = ".md";
     public static final int    MIN_KEYWORD_LENGTH        = 3;
     private String             originFilePath            = null;
     private String             filteredFilePath          = null;
+    private String             markdownFilePath          = null;
     private ArrayList<Paper>   originPapers              = null;
     private ArrayList<Paper>   filteredPapers            = null;
     private HashSet<String>    titleKeywordsSet          = null;
@@ -49,6 +52,7 @@ public class PapersFilter
     {
         this.originFilePath = originFilePath;
         this.filteredFilePath = createFilteredFilePath();
+        this.markdownFilePath = createMarkdownFilePath();
         this.originPapers = new ArrayList<Paper>();
         this.filteredPapers = new ArrayList<Paper>();
         this.titleKeywordsSet = new HashSet<String>();
@@ -69,6 +73,17 @@ public class PapersFilter
         buffer.append(this.originFilePath.substring(index));
         return buffer.toString();
     }
+
+    private String createMarkdownFilePath()
+    {
+        int index = this.originFilePath.indexOf('.');
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(this.originFilePath.substring(0, index));
+        buffer.append(FILTERED_PAPERS_FILE_MARK);
+        buffer.append(MARKDOWN_PAPERS_FILE_MARK);
+        buffer.append(MARKDOWN_FORMAT_EXTENSION);
+        return buffer.toString();
+    }
     
     public void filter() throws IOException
     {
@@ -78,6 +93,8 @@ public class PapersFilter
         this.filterByKeywords();
         // step3. write filtered papers into file
         ManagerIO.savePapers(this.filteredPapers, this.filteredFilePath, false);
+        // step4. save filtered papers into file in markdown format
+        ManagerIO.savePapersInMarkdown(this.filteredPapers, this.markdownFilePath, false);
     }
     
     public void filterByKeywords()
