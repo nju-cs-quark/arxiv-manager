@@ -1,3 +1,3 @@
-ARXIV MIRROR SITE: http://cn.arxiv.org
+ARXIV MIRROR SITE: http://arxiv.org
 ARXIV SUBJECT: quant-ph
 ARXIV STORAGE DIRECTORY: D:/workspaces/repositories/arxiv-contents/

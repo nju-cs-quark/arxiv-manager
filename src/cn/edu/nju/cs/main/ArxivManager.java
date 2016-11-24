@@ -119,25 +119,25 @@ public class ArxivManager
                 Extractor newSubmissionExtractor = new NewSubmissionExtractor();
                 newSubmissionExtractor.extract();
                 System.out.println("arxiv-manager: extracting new submissions done!");
+                String filePath = ((NewSubmissionExtractor) newSubmissionExtractor)
+                    .getPaperFilePath();
                 // if there is filter command when extracting papers,
                 // then after extraction, filter these papers.
                 if (cmd.hasOption("f"))
                 {
-                    String filePath = ((NewSubmissionExtractor) newSubmissionExtractor)
-                            .getPaperFilePath();
                     System.out.println("arxiv-manager: filtering new submissions now...");
                     Filter filter = new Filter(filePath);
                     filter.filter();
-                    System.out.println("arxiv-manager: filtering new submissions done!");
-                    
-                    // open the filtered file for me to read
-                    int index = filePath.indexOf('.');
-                    StringBuffer filteredFilePath = new StringBuffer();
-                    filteredFilePath.append(filePath.substring(0, index));
-                    filteredFilePath.append(PapersFilter.FILTERED_PAPERS_FILE_MARK);
-                    filteredFilePath.append(filePath.substring(index));
-                    FileOpener.open(filteredFilePath.toString());
+                    System.out.println("arxiv-manager: filtering new submissions done!");                    
                 }
+                // open the filtered file for me to read
+                int index = filePath.indexOf('.');
+                StringBuffer filteredFilePath = new StringBuffer();
+                filteredFilePath.append(filePath.substring(0, index));
+                filteredFilePath.append(PapersFilter.FILTERED_PAPERS_FILE_MARK);
+                filteredFilePath.append(filePath.substring(index));
+                FileOpener.open(filteredFilePath.toString());
+
             }
             if (cmd.hasOption("m"))
             {

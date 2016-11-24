@@ -18,7 +18,13 @@ public class FileOpener
      */
     public static void open(String filePath)
     {
-        String cmd = "cmd.exe /c start " + filePath;
+        String OS = System.getProperty("os.name");
+        String cmd = null;
+        if (OS.startsWith("Windows"))
+          cmd = "cmd.exe /c start " + filePath;
+        else
+          cmd = "open -t " + filePath;
+        
         Runtime run = Runtime.getRuntime();
         try
         {
